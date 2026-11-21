@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Blog Anime - HTML CSS JS</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+  body{background:#0f0f1a;color:#fff;min-height:100vh}
+  header{background:linear-gradient(90deg,#ff2e63,#8a2be2);padding:30px 20px;text-align:center}
+  header h1{font-size:32px}
+  header p{opacity:.9;margin-top:5px}
+  .container{max-width:800px;margin:0 auto;padding:20px}
+  .form-box{background:#1e1e2e;padding:20px;border-radius:12px;margin-bottom:25px;border:1px solid #333}
+  .form-box h2{margin-bottom:12px;color:#ff2e63}
+  input,select,textarea{width:100%;padding:12px;margin-bottom:10px;border-radius:8px;border:none;background:#2a2a3a;color:#fff}
+  textarea{min-height:90px;resize:vertical}
+  button{width:100%;padding:12px;background:#ff2e63;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer}
+  button:hover{background:#e01e50}
+  .card{background:#1e1e2e;border-radius:12px;padding:20px;margin-bottom:18px;border-left:5px solid #ff2e63}
+  .card:nth-child(even){border-left-color:#8a2be2}
+  .tag{display:inline-block;background:#ff2e63;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:8px}
+  .card h3{font-size:20px;margin-bottom:6px}
+  .meta{font-size:13px;color:#aaa;margin-bottom:10px}
+  .card p{line-height:1.6;color:#ddd;white-space:pre-wrap}
+  .del{margin-top:10px;background:#333;width:auto;padding:6px 12px;font-size:13px}
+  footer{text-align:center;padding:20px;color:#888;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌸 MEU BLOG ANIME 🌸</h1>
+  <p>Feito em HTML + CSS + JS puro - por Wendell</p>
+</header>
+<div class="container">
+  <div class="form-box">
+    <h2>✍️ Escrever novo post</h2>
+    <form id="form">
+      <input type="text" id="titulo" placeholder="Título do post - ex: Melhor anime de 2026" required>
+      <input type="text" id="autor" placeholder="Seu nome - ex: Wendell">
+      <select id="anime">
+        <option>Frieren</option>
+        <option>Solo Leveling</option>
+        <option>Naruto</option>
+        <option>One Piece</option>
+        <option>Jujutsu Kaisen</option>
+        <option>Outro Anime</option>
+      </select>
+      <textarea id="texto" placeholder="Escreva sobre o anime..." required></textarea>
+      <button type="submit">POSTAR 🚀</button>
+    </form>
+  </div>
+  <h2 style="margin-bottom:15px;">📚 Posts (<span id="count">0</span>)</h2>
+  <div id="posts"></div>
+</div>
+<footer>Blog Anime em HTML CSS JS - Salva no seu navegador - Sem PHP, sem servidor</footer>
+<script>
+const padrao = [
+  {titulo:'Meu Anime Favorito de 2026', autor:'Wendell', anime:'Frieren', texto:'Esse anime de 2026 está muito bom! Animação linda, história top, personagem feminina forte. Recomendo pra todo mundo que curte anime.', data:'21/11/2026'},
+  {titulo:'Top 3 Animes que você precisa ver', autor:'Wendell', anime:'Solo Leveling', texto:'1 - Frieren, 2 - Solo Leveling, 3 - Jujutsu Kaisen. Os 3 são muito bons, com luta, história e personagem feminina forte.', data:'21/11/2026'},
+  {titulo:'Por que eu gosto de anime dublado?', autor:'Wendell', anime:'Naruto', texto:'Anime dublado em português é muito melhor, dá pra entender tudo sem ficar lendo legenda e vendo a luta ao mesmo tempo.', data:'21/11/2026'}
+];
+let posts = JSON.parse(localStorage.getItem('blog_anime')) || padrao;
+function salvar(){ localStorage.setItem('blog_anime', JSON.stringify(posts)); }
+function mostrar(){
+  const div = document.getElementById('posts');
+  document.getElementById('count').textContent = posts.length;
+  div.innerHTML = posts.map((p,i)=>`
+    <div class="card">
+      <span class="tag">${p.anime}</span>
+      <h3>${p.titulo}</h3>
+      <div class="meta">Por ${p.autor} • ${p.data}</div>
+      <p>${p.texto}</p>
+      <button class="del" onclick="apagar(${i})">🗑️ Apagar</button>
+    </div>`).join('');
+}
+function apagar(i){ posts.splice(i,1); salvar(); mostrar(); }
+document.getElementById('form').addEventListener('submit', e=>{
+  e.preventDefault();
+  const novo = {
+    titulo: document.getElementById('titulo').value,
+    autor: document.getElementById('autor').value || 'Anônimo',
+    anime: document.getElementById('anime').value,
+    texto: document.getElementById('texto').value,
+    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
+  };
+  posts.unshift(novo); salvar(); mostrar(); e.target.reset();
+});
+mostrar();
+</script>
+</body>
+</html>
